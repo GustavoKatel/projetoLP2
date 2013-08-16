@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    
+    <meta charset="utf-8">
+    
+    <title>Google Maps JavaScript API v3 Example: Circle Simple</title>
+    
+    <style type="text/css">
+    
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    #map_canvas {
+      height: 100%;
+    }
+
+    @media print {
+      html, body {
+        height: auto;
+      }
+
+      #map_canvas {
+        height: 650px;
+      }
+    }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+    <script>
+      /**/
+      var ufpbCoords = new google.maps.LatLng(-7.135855,-34.842932);
+      /**/
+      var mapOptions = {
+          zoom: 4,
+          center: ufpbCoords,
+          mapTypeId: google.maps.MapTypeId.TERRAIN
+      };
+      var _map;
+      function initialize()
+      {
+        _map = new google.maps.Map(document.getElementById('map_canvas'),
+            mapOptions);
+
+        /* markers */
+//         var ufpbMarker = new google.maps.Marker({
+// 	  position: ufpbCoords,
+// 	  map: _map,
+// 	  title: 'UFPB',
+// 	});
+        /* */
+      //
+      }
+      var markers = new Array();
+      function addMarker(lat, lon, name)
+      {
+	  markers[name] = new google.maps.Marker({
+ 	  position: new google.maps.LatLng(lat,lon),
+ 	  map: _map,
+ 	  title: name,
+ 	});
+      }
+      function updateMarker(lat, lon, name)
+      {
+	if(markers[name]==undefined)
+	{
+	  markers[name] = new google.maps.Marker({
+	    position: new google.maps.LatLng(lat,lon),
+	    map: _map,
+	    title: name,
+	  });
+	} else {
+	  markers[name].setPosition(new google.maps.LatLng(lat,lon));
+	}
+      }
+    </script>
+  </head>
+  <body onload="initialize();">
+    <div id="map_canvas"></div>
+  </body>
+</html>
