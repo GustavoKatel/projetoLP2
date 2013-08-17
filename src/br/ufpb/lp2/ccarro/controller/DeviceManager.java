@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import br.ufpb.lp2.ccarro.extra.Utils;
 import br.ufpb.lp2.ccarro.model.Device;
 import br.ufpb.lp2.ccarro.model.Location;
 
@@ -53,13 +54,19 @@ public class DeviceManager extends Thread {
 //				e.printStackTrace();
 			}
 		}
-		System.out.println("Fechando DeviceManager");
+		System.out.println("DeviceManager fechado!");
 	}
 	
 	public synchronized void close()
 	{
 		try {
+			//
+			for(Device d : devices)
+				d.close();
+			//
+			pool.shutdown();
 			pool.shutdownNow();
+			//
 			running=false;
 			server.close();
 		} catch (IOException e) {

@@ -58,7 +58,7 @@ public class MapManager extends Thread {
 				break;
 			}
 		}
-		System.out.println("Fechando MapManager");
+		System.out.println("MapManager fechado!");
 	}
 	
 	private void initialize()

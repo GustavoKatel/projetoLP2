@@ -14,6 +14,8 @@ public class Device implements Runnable {
 	private DataInputStream instream;
 	private DataOutputStream outstream;
 	
+	private boolean running = true;
+	
 	public Device(String dName, Socket s)
 	{
 		this.dName = dName;
@@ -34,32 +36,54 @@ public class Device implements Runnable {
 	public void run()
 	{
 		//receive location from socket
-		while(true)
+		while(running)
 		{
 			try {
 				//
 				String cmd = instream.readUTF();
+				System.out.println("cmd recebido: "+cmd+" de "+this.socket.getInetAddress());
 				if(cmd.startsWith("setLocation:"))
 				{
-					if(cmd.indexOf('|')<0)
+					if(cmd.indexOf('#')<0)
 					{
 						System.out.println("Erro de protocolo. Mensagem: "+cmd);
 					} else {
 						String lat, lon;
-						lat = cmd.split("|")[0];
-						lat.replaceAll("setLocation:", "");
-						lon = cmd.split("|")[1];
+						lat = cmd.split("#")[0];
+						lat = lat.replaceAll("setLocation:", "");
+						lon = cmd.split("#")[1];
+						//
+						System.out.println("lat: "+lat+" lon: "+lon);
+						//
+						this.location.setLat(Double.parseDouble(lat));
+						this.location.setLon(Double.parseDouble(lon));
 					}
 				}
 				//
 				Thread.sleep(2000);
-			}catch (Exception e) {
+			}catch (IOException e) {
+				break;
+//				e.printStackTrace();
+			} catch (InterruptedException e) {
 				break;
 //				e.printStackTrace();
 			}
 		}
+		System.out.println("Device ("+this.dName+") fechado.");
 	}
 
+	public synchronized void close()
+	{
+		try {
+			this.running = false;
+			this.instream.close();
+			this.outstream.close();
+			this.socket.close();
+		} catch (IOException e) {
+			// TODO: handle exception
+		}
+	}
+	
 	public String getDName() {
 		return dName;
 	}
