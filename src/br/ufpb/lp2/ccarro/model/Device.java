@@ -41,7 +41,7 @@ public class Device implements Runnable {
 			try {
 				//
 				String cmd = instream.readUTF();
-				System.out.println("cmd recebido: "+cmd+" de "+this.socket.getInetAddress());
+//				System.out.println("cmd recebido: "+cmd+" de "+this.socket.getInetAddress()+":"+this.socket.getPort());
 				if(cmd.startsWith("setLocation:"))
 				{
 					if(cmd.indexOf('#')<0)
@@ -53,7 +53,7 @@ public class Device implements Runnable {
 						lat = lat.replaceAll("setLocation:", "");
 						lon = cmd.split("#")[1];
 						//
-						System.out.println("lat: "+lat+" lon: "+lon);
+//						System.out.println("lat: "+lat+" lon: "+lon);
 						//
 						this.location.setLat(Double.parseDouble(lat));
 						this.location.setLon(Double.parseDouble(lon));

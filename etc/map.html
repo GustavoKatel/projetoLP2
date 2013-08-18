@@ -31,6 +31,15 @@
     </style>
     <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
     <script>
+      function newPin(label)
+      {
+	var pinColor = ('000000' + (Math.random()*0xFFFFFF<<0).toString(16)).slice(-6);
+	var pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld="+label+"|" + pinColor,
+        new google.maps.Size(21, 34),
+        new google.maps.Point(0,0),
+        new google.maps.Point(10, 34));
+        return pinImage;
+      }
       /**/
       var ufpbCoords = new google.maps.LatLng(-7.135855,-34.842932);
       /**/
@@ -50,6 +59,7 @@
 // 	  position: ufpbCoords,
 // 	  map: _map,
 // 	  title: 'UFPB',
+// 	  icon: newPin("1"),
 // 	});
         /* */
       //
@@ -71,6 +81,7 @@
 	    position: new google.maps.LatLng(lat,lon),
 	    map: _map,
 	    title: name,
+	    icon: newPin(name.split("_")[1]),
 	  });
 	} else {
 	  markers[name].setPosition(new google.maps.LatLng(lat,lon));
