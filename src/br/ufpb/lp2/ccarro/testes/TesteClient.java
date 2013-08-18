@@ -15,6 +15,7 @@ public class TesteClient {
 		DataOutputStream out = new DataOutputStream(socket.getOutputStream());
 		DataInputStream in = new DataInputStream(socket.getInputStream());
 		String cmd = in.readUTF();
+		String name = cmd.split(":")[1];
 		System.out.println(cmd);
 		//
 		Random r = new Random(System.currentTimeMillis());
@@ -24,13 +25,13 @@ public class TesteClient {
 		float lat_step = (lat-lat_c) / 500f;
 		float lon_step = (lon-lon_c) / 500f;
 		
-		System.out.println("lat_step: "+lat_step+" lon_step: "+lon_step);
+		System.out.println(name+": lat_step: "+lat_step+" lon_step: "+lon_step);
 		
 		while(true)
 		{
 			lat_c+=lat_step;
 			lon_c+=lon_step;
-			System.out.println("lat: "+lat_c+"/"+lat+" lon_c: "+lon_c+"/"+lon);
+			System.out.println(name+": lat: "+lat_c+"/"+lat+" lon_c: "+lon_c+"/"+lon);
 			//
 			if(Math.abs(lat_c)>=Math.abs(lat) || Math.abs(lon_c)>=Math.abs(lon))
 			{
@@ -38,7 +39,7 @@ public class TesteClient {
 				lon = rand(r, -180,180);
 				lat_step = (lat-lat_c) / 500f;
 				lon_step = (lon-lon_c) / 500f;
-				System.out.println("lat_step: "+lat_step+" lon_step: "+lon_step);
+				System.out.println(name+": lat_step: "+lat_step+" lon_step: "+lon_step);
 			}
 			//
 			out.writeUTF("setLocation:"+lat_c+"#"+lon_c);
