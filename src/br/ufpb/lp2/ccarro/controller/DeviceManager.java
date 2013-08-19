@@ -43,7 +43,7 @@ public class DeviceManager extends Thread {
 				System.out.println("Aguardando dispositivos");
 				Socket s = server.accept();
 				System.out.println("Novo dispositivo em "+s.getInetAddress()+":"+s.getPort());
-				final Device d = new Device("device_"+String.valueOf(devices.size()+1), s);
+				Device d = new Device("device_"+String.valueOf(devices.size()+1), s);
 				devices.add(d);
 				pool.submit(d);
 				for(DeviceListener l : listeners)

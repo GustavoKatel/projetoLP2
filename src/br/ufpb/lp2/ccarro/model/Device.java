@@ -13,6 +13,8 @@ public class Device implements Runnable {
 	
 	private DataInputStream instream;
 	private DataOutputStream outstream;
+
+	private int state = 1;
 	
 	private boolean running = true;
 	
@@ -28,7 +30,7 @@ public class Device implements Runnable {
 			//
 			outstream.writeUTF("setName:"+this.dName);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			state=0;
 			e.printStackTrace();
 		}
 	}
@@ -59,13 +61,8 @@ public class Device implements Runnable {
 						this.location.setLon(Double.parseDouble(lon));
 					}
 				}
-				//
-				Thread.sleep(2000);
 			}catch (IOException e) {
-				break;
-//				e.printStackTrace();
-			} catch (InterruptedException e) {
-				break;
+				close();
 //				e.printStackTrace();
 			}
 		}
@@ -75,6 +72,7 @@ public class Device implements Runnable {
 	public synchronized void close()
 	{
 		try {
+			state=0;
 			this.running = false;
 			this.instream.close();
 			this.outstream.close();
@@ -82,6 +80,16 @@ public class Device implements Runnable {
 		} catch (IOException e) {
 			// TODO: handle exception
 		}
+	}
+	
+	/**
+	 * 0 - fechado
+	 * 1 - ativo
+	 * @return the state
+	 */
+	public synchronized int getState()
+	{
+		return state;
 	}
 	
 	public String getDName() {
@@ -99,5 +107,5 @@ public class Device implements Runnable {
 	public void setLocation(Location location) {
 		this.location = location;
 	}
-	
+
 }

@@ -65,14 +65,6 @@
       //
       }
       var markers = new Array();
-      function addMarker(lat, lon, name)
-      {
-	  markers[name] = new google.maps.Marker({
- 	  position: new google.maps.LatLng(lat,lon),
- 	  map: _map,
- 	  title: name,
- 	});
-      }
       function updateMarker(lat, lon, name)
       {
 	if(markers[name]==undefined)
@@ -86,6 +78,11 @@
 	} else {
 	  markers[name].setPosition(new google.maps.LatLng(lat,lon));
 	}
+      }
+      function removeMarker(name)
+      {
+	markers.splice(name,1);
+	console.log(markers);
       }
     </script>
   </head>
