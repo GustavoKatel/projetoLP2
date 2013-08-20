@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.Random;
 
-public class TesteClient extends Thread {
+public class TesteNClients extends Thread {
 
 	/**
 	 * @param args
@@ -14,8 +14,12 @@ public class TesteClient extends Thread {
 	 */
 	public static void main(String[] args) throws InterruptedException 
 	{
-		(new TesteClient()).start();
-		Thread.sleep(1000);
+		int n=15;
+		for(int i=0;i<n;i++)
+		{
+			(new TesteNClients()).start();
+			Thread.sleep(1000);
+		}
 	}
 	
 	public static float rand(Random r, float rangeMin, float rangeMax)

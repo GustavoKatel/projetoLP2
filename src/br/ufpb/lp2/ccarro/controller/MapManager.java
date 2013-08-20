@@ -45,10 +45,18 @@ public class MapManager extends Thread {
 					
 					@Override
 					public void run() {
-						String js = "updateMarker("+
-								d.getLocation().getLat()+","+
-								d.getLocation().getLon()+
-								",\""+d.getDName()+"\");";
+						String js;
+						if(d.getState()==1)
+						{
+							js = "updateMarker("+
+									d.getLocation().getLat()+","+
+									d.getLocation().getLon()+
+									",\""+d.getDName()+"\");";
+						}else{
+							js="removeMarker(\""+
+								d.getDName()+"\");";
+							mgr.remove(d);
+						}
 						brw.evaluate(js);
 						System.out.println(js);
 					}

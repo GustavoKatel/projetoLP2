@@ -56,6 +56,11 @@ public class DeviceManager extends Thread {
 		System.out.println("DeviceManager fechado!");
 	}
 	
+	public synchronized void remove(Device d)
+	{
+		this.devices.remove(d);
+	}
+	
 	public synchronized void close()
 	{
 		try {
