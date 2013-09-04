@@ -14,7 +14,7 @@ public class TesteNClients extends Thread {
 	 */
 	public static void main(String[] args) throws InterruptedException 
 	{
-		int n=15;
+		int n=80;
 		for(int i=0;i<n;i++)
 		{
 			(new TesteNClients()).start();

@@ -4,14 +4,19 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.ProgressEvent;
 import org.eclipse.swt.browser.ProgressListener;
 
+import br.ufpb.lp2.ccarro.controller.DeviceListener;
 import br.ufpb.lp2.ccarro.controller.DeviceManager;
 import br.ufpb.lp2.ccarro.controller.MapManager;
+import br.ufpb.lp2.ccarro.model.Device;
+
+import org.eclipse.swt.widgets.List;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.GridData;
 
 public class Main {
 
@@ -21,8 +26,9 @@ public class Main {
 	//
 	
 	private Browser browser;
+	private List devices_list;
 	
-	protected Shell shell;
+	protected Shell shlCadeMeuCarro;
 
 	/**
 	 * Launch the application.
@@ -43,10 +49,10 @@ public class Main {
 	public void open() {
 		Display display = Display.getDefault();
 		createContents();
-		shell.open();
-		shell.layout();
+		shlCadeMeuCarro.open();
+		shlCadeMeuCarro.layout();
 		//
-		shell.addListener(SWT.Close, new Listener() {
+		shlCadeMeuCarro.addListener(SWT.Close, new Listener() {
 		      public void handleEvent(Event event) {
 		    	  System.out.println("Interrompendo threads...");
 		    	  try{
@@ -62,7 +68,7 @@ public class Main {
 		//
 		initManagers();
 		//
-		while (!shell.isDisposed()) {
+		while (!shlCadeMeuCarro.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
 			}
@@ -73,12 +79,19 @@ public class Main {
 	 * Create contents of the window.
 	 */
 	protected void createContents() {
-		shell = new Shell();
-		shell.setSize(666, 475);
-		shell.setText("SWT Application");
-		shell.setLayout(new FillLayout(SWT.HORIZONTAL));
+		shlCadeMeuCarro = new Shell();
+		shlCadeMeuCarro.setSize(666, 475);
+		shlCadeMeuCarro.setText("Cade Meu Carro?");
+		shlCadeMeuCarro.setLayout(new GridLayout(2, false));
 		
-		browser = new Browser(shell, SWT.NONE);
+		devices_list = new List(shlCadeMeuCarro, SWT.BORDER | SWT.V_SCROLL);
+		GridData device_list_gridData = new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1);
+		device_list_gridData.widthHint=200;
+		devices_list.setLayoutData(device_list_gridData);
+		devices_list.setItems(new String[] {});
+		
+		browser = new Browser(shlCadeMeuCarro, SWT.NONE);
+		browser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		browser.addProgressListener(new ProgressListener() {
 			
@@ -97,9 +110,32 @@ public class Main {
 	private void initManagers()
 	{
 		deviceMgr = new DeviceManager();
+		deviceMgr.addDeviceListener(listener);
 		deviceMgr.start();
 		mapMgr = new MapManager(deviceMgr, browser);
 		mapMgr.start();
 	}
+	
+	private DeviceListener listener = new DeviceListener() {
+		
+		@Override
+		public void onNewDevice(final Device d) {
+			Main.this.shlCadeMeuCarro.getDisplay().syncExec(new Runnable() {
+				public void run() {
+				    devices_list.add(d.getDName());
+				}}); 
+		}
+
+		@Override
+		public void onDeviceOut(final Device d) {
+			Main.this.shlCadeMeuCarro.getDisplay().syncExec(new Runnable() {
+				
+				@Override
+				public void run() {
+					devices_list.remove(d.getDName());
+				}
+			});
+		}
+	};
 	
 }

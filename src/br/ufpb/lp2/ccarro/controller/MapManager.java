@@ -1,6 +1,7 @@
 package br.ufpb.lp2.ccarro.controller;
 
 import java.io.File;
+import java.util.HashSet;
 import java.util.LinkedList;
 
 import org.eclipse.swt.browser.Browser;
@@ -45,20 +46,23 @@ public class MapManager extends Thread {
 					
 					@Override
 					public void run() {
-						String js;
-						if(d.getState()==1)
+						String js=null;
+						if(d.getState()==0)
 						{
 							js = "updateMarker("+
 									d.getLocation().getLat()+","+
 									d.getLocation().getLon()+
 									",\""+d.getDName()+"\");";
-						}else{
+						}else if(d.getState()==1){
 							js="removeMarker(\""+
 								d.getDName()+"\");";
-							mgr.remove(d);
+							d.setRemovedFromJS();
 						}
-						brw.evaluate(js);
-						System.out.println(js);
+						if(js!=null)
+						{
+							brw.evaluate(js);
+							System.out.println(js);
+						}
 					}
 				});
 			}
@@ -115,6 +119,12 @@ public class MapManager extends Thread {
 					else
 						enqueuedMarkers.add(r);
 				}
+			}
+
+			@Override
+			public void onDeviceOut(Device d) {
+				// TODO Auto-generated method stub
+				
 			}
 		});
 	}

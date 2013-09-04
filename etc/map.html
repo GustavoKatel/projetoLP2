@@ -73,7 +73,7 @@
 	    position: new google.maps.LatLng(lat,lon),
 	    map: _map,
 	    title: name,
-	    icon: newPin(name.split("_")[1]),
+	    icon: newPin("*"/*name.split("_")[1]*/),
 	  });
 	} else {
 	  markers[name].setPosition(new google.maps.LatLng(lat,lon));
@@ -81,18 +81,20 @@
       }
       function removeMarker(name)
       {
-	var marker = markers[name];
-	//markers.splice(name,1);
-	delete markers[name];
-	marker.setTitle(marker.getTitle()+" + MORTO!");
-	marker.setIcon(new google.maps.MarkerImage("http://maps.gstatic.com/intl/en_ALL/mapfiles/drag_cross_67_16.png",
-	  new google.maps.Size(21, 34),
-	  new google.maps.Point(0,0),
-	  new google.maps.Point(10, 34)));
-	setTimeout(function(){
-	      marker.setMap(null);
-	      delete marker;
-	    },10000);
+		var marker = markers[name];
+		if(marker==undefined) return;
+		//markers.splice(name,1);
+		//delete markers[name];
+		marker.setTitle(marker.getTitle()+" + MORTO!");
+		marker.setIcon(new google.maps.MarkerImage("http://maps.gstatic.com/intl/en_ALL/mapfiles/drag_cross_67_16.png",
+		  new google.maps.Size(21, 34),
+		  new google.maps.Point(0,0),
+		  new google.maps.Point(10, 34)));
+		  setTimeout(function(){
+			  marker.setMap(null);
+			  delete marker;
+			  delete markers[name];
+			},10000);
       }
     </script>
   </head>

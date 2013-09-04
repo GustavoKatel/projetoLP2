@@ -14,7 +14,8 @@ public class Device implements Runnable {
 	private DataInputStream instream;
 	private DataOutputStream outstream;
 
-	private int state = 1;
+	/* 0 - normal, 1 - toDelete, 2 - removed */
+	private int state = 0;
 	
 	private boolean running = true;
 	
@@ -30,7 +31,7 @@ public class Device implements Runnable {
 			//
 			outstream.writeUTF("setName:"+this.dName);
 		} catch (IOException e) {
-			state=0;
+			state=1;
 			e.printStackTrace();
 		}
 	}
@@ -72,7 +73,7 @@ public class Device implements Runnable {
 	public synchronized void close()
 	{
 		try {
-			state=0;
+			state=1;
 			this.running = false;
 			this.instream.close();
 			this.outstream.close();
@@ -82,9 +83,15 @@ public class Device implements Runnable {
 		}
 	}
 	
+	public synchronized void setRemovedFromJS()
+	{
+		this.state=2;
+	}
+	
 	/**
-	 * 0 - fechado
-	 * 1 - ativo
+	 * 0 - normal
+	 * 1 - toDelete
+	 * 2 - deletedFromJS
 	 * @return the state
 	 */
 	public synchronized int getState()
