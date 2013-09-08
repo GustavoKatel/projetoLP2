@@ -139,4 +139,21 @@ public class MapManager extends Thread {
 		this.running=false;
 	}
 	
+	public void setVisible(final String dName, final boolean b)
+	{
+		Runnable r = new Runnable() {
+			
+			@Override
+			public void run() {
+				brw.evaluate("setVisible(\""+dName+"\", "+(b ? "true" : "false")+");");
+			}
+		};
+		synchronized (jsOk_lock) {
+			if(jsOk)
+				execute(r);
+			else
+				enqueuedMarkers.add(r);
+		}
+	}
+	
 }

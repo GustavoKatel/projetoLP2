@@ -14,6 +14,10 @@ public class Device implements Runnable {
 	private DataInputStream instream;
 	private DataOutputStream outstream;
 
+	private int lost_update = 0;
+	private Object lost_update_obj;
+	private Thread update_monitor;
+	
 	/* 0 - normal, 1 - toDelete, 2 - removed */
 	private int state = 0;
 	
@@ -34,6 +38,10 @@ public class Device implements Runnable {
 			state=1;
 			e.printStackTrace();
 		}
+		//
+		update_monitor = new Thread(update_monitor_run);
+		update_monitor.start();
+		lost_update_obj = new Object();
 	}
 	
 	public void run()
@@ -44,6 +52,9 @@ public class Device implements Runnable {
 			try {
 				//
 				String cmd = instream.readUTF();
+				synchronized (lost_update_obj) {
+					lost_update=0;
+				}
 //				System.out.println("cmd recebido: "+cmd+" de "+this.socket.getInetAddress()+":"+this.socket.getPort());
 				if(cmd.startsWith("setLocation:"))
 				{
@@ -58,8 +69,12 @@ public class Device implements Runnable {
 						//
 //						System.out.println("lat: "+lat+" lon: "+lon);
 						//
-						this.location.setLat(Double.parseDouble(lat));
-						this.location.setLon(Double.parseDouble(lon));
+						try {
+							this.location.setLat(Double.parseDouble(lat));
+							this.location.setLon(Double.parseDouble(lon));
+						}catch (NumberFormatException e) {
+							// TODO: handle exception
+						}
 					}
 				}
 			}catch (IOException e) {
@@ -115,4 +130,27 @@ public class Device implements Runnable {
 		this.location = location;
 	}
 
+	private Runnable update_monitor_run = new Runnable() {
+		
+		@Override
+		public void run() {
+			while(running)
+			{
+				try {
+					synchronized(lost_update_obj) {
+						if(lost_update>=3)
+						{
+							close();
+							break;
+						}
+						lost_update++;
+					}
+					Thread.sleep(2000);
+				}catch (InterruptedException e) {
+					break;
+				}
+			}
+		}
+	};
+	
 }

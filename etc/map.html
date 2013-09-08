@@ -96,6 +96,18 @@
 			  delete markers[name];
 			},10000);
       }
+	  function setVisible(name, b)
+	  {
+			if(name=="all")
+			{
+				for(var i=0;i<Object.keys(markers).length;i++)
+					markers[Object.keys(markers)[i]].setMap((b ? _map : null));
+			}
+			//
+			var marker = markers[name];
+			if(marker!=undefined)
+				b ? marker.setMap(_map) : marker.setMap(null);
+	  }
     </script>
   </head>
   <body onload="initialize();">

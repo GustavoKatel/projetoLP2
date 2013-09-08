@@ -35,7 +35,7 @@ public class DeviceManager extends Thread {
 			e.printStackTrace();
 		}
 		//
-		device_monitor = new Thread(device_monitor_run);
+		device_monitor = new Thread(device_monitor_run, "device_monitor");
 		device_monitor.start();
 	}
 	
@@ -47,13 +47,13 @@ public class DeviceManager extends Thread {
 				System.out.println("Aguardando dispositivos");
 				Socket s = server.accept();
 				System.out.println("Novo dispositivo em "+s.getInetAddress()+":"+s.getPort());
-				synchronized (this) {
-					Device d = new Device("device_"+s.getInetAddress().getHostAddress(), s);
+				Device d = new Device("device_"+s.getInetAddress().getHostAddress()+":"+s.getPort(), s);
+				synchronized (devices) {
 					devices.add(d);
-					pool.submit(d);
-					for(DeviceListener l : listeners)
-						l.onNewDevice(d);
 				}
+				pool.submit(d);
+				for(DeviceListener l : listeners)
+					l.onNewDevice(d);
 			} catch (IOException e) {
 				break;
 //				e.printStackTrace();
@@ -62,14 +62,18 @@ public class DeviceManager extends Thread {
 		System.out.println("DeviceManager fechado!");
 	}
 	
-	public synchronized void remove(Device d)
+	public void remove(Device d)
 	{
-		this.devices.remove(d);
+		synchronized(this.devices)
+		{
+			System.out.println("removing "+d.getDName());
+			this.devices.remove(d);
+		}
 		for(DeviceListener l : listeners)
 			l.onDeviceOut(d);
 	}
 	
-	public synchronized void close()
+	public void close()
 	{
 		try {
 			//
@@ -98,7 +102,9 @@ public class DeviceManager extends Thread {
 	
 	public void addDeviceListener(DeviceListener l)
 	{
-		listeners.add(l);
+		synchronized (listeners) {
+			listeners.add(l);
+		}
 	}
 	
 	private Runnable device_monitor_run = new Runnable() {
@@ -108,6 +114,11 @@ public class DeviceManager extends Thread {
 			Device d = null;
 			while(running)
 			{
+				try {
+					Thread.sleep(500);
+				}catch (InterruptedException e) {
+					break;
+				}
 				for(int i=0;i<devices.size();i++)
 				{
 					d = devices.get(i);

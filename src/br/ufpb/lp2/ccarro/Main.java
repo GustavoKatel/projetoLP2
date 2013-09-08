@@ -8,6 +8,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.ProgressEvent;
 import org.eclipse.swt.browser.ProgressListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 
 import br.ufpb.lp2.ccarro.controller.DeviceListener;
 import br.ufpb.lp2.ccarro.controller.DeviceManager;
@@ -84,11 +86,22 @@ public class Main {
 		shlCadeMeuCarro.setText("Cade Meu Carro?");
 		shlCadeMeuCarro.setLayout(new GridLayout(2, false));
 		
-		devices_list = new List(shlCadeMeuCarro, SWT.BORDER | SWT.V_SCROLL);
+		devices_list = new List(shlCadeMeuCarro, SWT.BORDER | SWT.V_SCROLL | SWT.MULTI);
 		GridData device_list_gridData = new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1);
 		device_list_gridData.widthHint=200;
 		devices_list.setLayoutData(device_list_gridData);
-		devices_list.setItems(new String[] {});
+		devices_list.add("Todos");
+		devices_list.addListener(SWT.Selection, new Listener() {
+		      public void handleEvent(Event e) {
+		    	  if(devices_list.isSelected(0))
+		    	  {
+		    		  mapMgr.setVisible("all", true);
+		    		  return;
+		    	  }
+		          for(int i=1;i<devices_list.getItems().length;i++)
+		        	  mapMgr.setVisible(devices_list.getItems()[i], devices_list.isSelected(i));
+		        }
+		});
 		
 		browser = new Browser(shlCadeMeuCarro, SWT.NONE);
 		browser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -128,7 +141,7 @@ public class Main {
 
 		@Override
 		public void onDeviceOut(final Device d) {
-			Main.this.shlCadeMeuCarro.getDisplay().syncExec(new Runnable() {
+			Main.this.shlCadeMeuCarro.getDisplay().asyncExec(new Runnable() {
 				
 				@Override
 				public void run() {
