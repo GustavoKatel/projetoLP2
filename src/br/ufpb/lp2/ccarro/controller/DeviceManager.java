@@ -82,7 +82,6 @@ public class DeviceManager extends Thread {
 			for(Device d : devices)
 				d.close();
 			//
-			pool.shutdown();
 			pool.shutdownNow();
 			//
 			running=false;
