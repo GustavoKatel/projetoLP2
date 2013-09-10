@@ -55,6 +55,7 @@ public class Device implements Runnable {
 				synchronized (lost_update_obj) {
 					lost_update=0;
 				}
+				if(!running) break;
 //				System.out.println("cmd recebido: "+cmd+" de "+this.socket.getInetAddress()+":"+this.socket.getPort());
 				if(cmd.startsWith("setLocation:"))
 				{
