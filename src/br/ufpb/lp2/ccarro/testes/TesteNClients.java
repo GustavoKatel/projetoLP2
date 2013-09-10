@@ -11,7 +11,7 @@ public class TesteNClients extends Thread {
 		int n=80;
 		for(int i=0;i<n;i++)
 		{
-			(new TesteNClients()).start();
+			(new TesteClient()).start();
 			Thread.sleep(1000);
 		}
 	}
