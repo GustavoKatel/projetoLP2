@@ -133,7 +133,7 @@ public class Main {
 		
 		@Override
 		public void onNewDevice(final Device d) {
-			Main.this.shlCadeMeuCarro.getDisplay().syncExec(new Runnable() {
+			Main.this.shlCadeMeuCarro.getDisplay().asyncExec(new Runnable() {
 				public void run() {
 				    devices_list.add(d.getDName());
 				}}); 

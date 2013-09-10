@@ -25,6 +25,8 @@ public class MapManager extends Thread {
 	
 	public MapManager(DeviceManager mgr, Browser brw)
 	{
+		super("map_manager");
+		//
 		this.mgr = mgr;
 		this.brw = brw;
 		//
@@ -46,23 +48,12 @@ public class MapManager extends Thread {
 					
 					@Override
 					public void run() {
-						String js=null;
-						if(d.getState()==0)
-						{
-							js = "updateMarker("+
-									d.getLocation().getLat()+","+
-									d.getLocation().getLon()+
-									",\""+d.getDName()+"\");";
-						}else if(d.getState()==1){
-							js="removeMarker(\""+
-								d.getDName()+"\");";
-							d.setRemovedFromJS();
-						}
-						if(js!=null)
-						{
-							brw.evaluate(js);
-							System.out.println(js);
-						}
+						String js="updateMarker("+
+								d.getLocation().getLat()+","+
+								d.getLocation().getLon()+
+								",\""+d.getDName()+"\");";
+						brw.evaluate(js);
+						System.out.println(js);
 					}
 				});
 			}
@@ -122,9 +113,23 @@ public class MapManager extends Thread {
 			}
 
 			@Override
-			public void onDeviceOut(Device d) {
-				// TODO Auto-generated method stub
-				
+			public void onDeviceOut(final Device d) {
+				Runnable r = new Runnable() {
+					
+					@Override
+					public void run() {
+						String js="removeMarker(\""+
+								d.getDName()+"\");";
+						brw.evaluate(js);
+					}
+				};
+				synchronized(jsOk_lock)
+				{
+					if(jsOk)
+						execute(r);
+					else
+						enqueuedMarkers.add(r);
+				}
 			}
 		});
 	}

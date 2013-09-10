@@ -18,7 +18,7 @@ public class Device implements Runnable {
 	private Object lost_update_obj;
 	private Thread update_monitor;
 	
-	/* 0 - normal, 1 - toDelete, 2 - removed */
+	/* 0 - normal, 1 - toDelete */
 	private int state = 0;
 	
 	private boolean running = true;
@@ -97,16 +97,10 @@ public class Device implements Runnable {
 			// TODO: handle exception
 		}
 	}
-	
-	public synchronized void setRemovedFromJS()
-	{
-		this.state=2;
-	}
-	
+		
 	/**
 	 * 0 - normal
 	 * 1 - toDelete
-	 * 2 - deletedFromJS
 	 * @return the state
 	 */
 	public synchronized int getState()

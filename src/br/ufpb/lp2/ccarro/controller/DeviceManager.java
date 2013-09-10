@@ -24,6 +24,8 @@ public class DeviceManager extends Thread {
 	
 	public DeviceManager()
 	{
+		super("device_manager");
+		//
 		devices = new LinkedList<Device>();
 		listeners = new HashSet<DeviceListener>();
 		//
@@ -55,7 +57,7 @@ public class DeviceManager extends Thread {
 				for(DeviceListener l : listeners)
 					l.onNewDevice(d);
 			} catch (IOException e) {
-				break;
+				close();
 //				e.printStackTrace();
 			}
 		}
@@ -122,7 +124,7 @@ public class DeviceManager extends Thread {
 				for(int i=0;i<devices.size();i++)
 				{
 					d = devices.get(i);
-					if(d.getState()==2)
+					if(d.getState()==1)
 					{
 						remove(d);
 						i=0;
