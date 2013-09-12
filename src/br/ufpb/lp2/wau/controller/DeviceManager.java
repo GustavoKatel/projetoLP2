@@ -1,4 +1,4 @@
-package br.ufpb.lp2.ccarro.controller;
+package br.ufpb.lp2.wau.controller;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import br.ufpb.lp2.ccarro.model.Device;
+import br.ufpb.lp2.wau.model.Device;
 
 public class DeviceManager extends Thread {
 

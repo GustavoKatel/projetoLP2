@@ -67,6 +67,7 @@
       var markers = new Array();
       function updateMarker(lat, lon, name)
       {
+		if(_map==undefined) return;
 	if(markers[name]==undefined)
 	{
 	  markers[name] = new google.maps.Marker({

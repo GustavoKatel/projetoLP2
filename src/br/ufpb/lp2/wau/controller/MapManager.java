@@ -1,4 +1,4 @@
-package br.ufpb.lp2.ccarro.controller;
+package br.ufpb.lp2.wau.controller;
 
 import java.io.File;
 import java.util.HashSet;
@@ -9,7 +9,7 @@ import org.eclipse.swt.browser.ProgressEvent;
 import org.eclipse.swt.browser.ProgressListener;
 import org.eclipse.swt.widgets.Display;
 
-import br.ufpb.lp2.ccarro.model.Device;
+import br.ufpb.lp2.wau.model.Device;
 
 public class MapManager extends Thread {
 

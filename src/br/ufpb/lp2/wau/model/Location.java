@@ -1,4 +1,4 @@
-package br.ufpb.lp2.ccarro.model;
+package br.ufpb.lp2.wau.model;
 
 public class Location {
 

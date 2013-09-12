@@ -1,6 +1,6 @@
-package br.ufpb.lp2.ccarro.controller;
+package br.ufpb.lp2.wau.controller;
 
-import br.ufpb.lp2.ccarro.model.Device;
+import br.ufpb.lp2.wau.model.Device;
 
 public interface DeviceListener {
 

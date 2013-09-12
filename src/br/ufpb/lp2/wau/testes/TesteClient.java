@@ -1,4 +1,4 @@
-package br.ufpb.lp2.ccarro.testes;
+package br.ufpb.lp2.wau.testes;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
